@@ -1,5 +1,5 @@
 name: Sync LeetCode Solutions
-
+# Resync schedule - 2026-05-10
 on:
   schedule:
     - cron: '30 0 * * *'
