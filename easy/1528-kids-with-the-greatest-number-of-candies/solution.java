@@ -13,7 +13,7 @@ class Solution {
         return max;
     }         
     public List<Boolean> kidsWithCandies(int[] candies, int extraCandies) {
-         ArrayList<Boolean> result = new ArrayList<>();
+        ArrayList<Boolean> result = new ArrayList<>();
         for (int i= 0; i < candies.length; i++){
             int maxCandies = findLargest(candies);
             if(candies[i] + extraCandies >= maxCandies){    
