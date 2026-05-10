@@ -135,7 +135,7 @@ class LeetCodeGitHubSync:
             raise
 
     @retry_with_backoff()
-    def get_submissions(self, limit: int = 100) -> List[Dict]:
+    def get_submissions(self, limit: int = 20) -> List[Dict]:
         """Fetch recent accepted submissions."""
         try:
             url = f"{self.LEETCODE_SUBMISSIONS_URL}?offset=0&limit={limit}"
@@ -148,6 +148,20 @@ class LeetCodeGitHubSync:
             
             # Filter for accepted submissions
             accepted_submissions = [s for s in submissions if s['status_display'] == 'Accepted']
+            
+            # Deduplicate by problem + language
+            unique_submissions = {}
+            for submission in accepted_submissions:
+                key = (
+                    submission['title_slug'],
+                submission['lang'].lower()
+                )
+                
+                # Keep newest submission
+                if key not in unique_submissions:
+                    unique_submissions[key] = submission
+                    
+            accepted_submissions = list(unique_submissions.values())       
             
             logger.info(f"Found {len(accepted_submissions)} accepted submissions")
             return accepted_submissions
