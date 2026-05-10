@@ -12,8 +12,7 @@ class Solution {
 
     public int gcd(int len1, int len2) {
 
-        while (len2 != 0){   // Euclidean Algorithm - Moves len2 into len1,replaces len2 with the remainder of len1 % len2 in each iteration
-
+        while (len2 != 0){
             int temp= len2;
             len2 = len1 % len2;
             len1 = temp;
