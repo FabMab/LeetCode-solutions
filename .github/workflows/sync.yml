@@ -2,7 +2,7 @@ name: Sync LeetCode Solutions
 
 on:
   schedule:
-    - cron: '20 1 * * *'
+    - cron: '30 0 * * *'
   workflow_dispatch:
 
 jobs:
