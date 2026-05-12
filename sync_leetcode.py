@@ -135,10 +135,11 @@ class LeetCodeGitHubSync:
             raise
 
     @retry_with_backoff()
-    def get_submissions(self, limit: int = 20) -> List[Dict]:
+    def get_submissions(self) -> List[Dict]:
         """Fetch recent accepted submissions."""
         try:
-            url = f"{self.LEETCODE_SUBMISSIONS_URL}?offset=0&limit={limit}"
+            url = f"{self.LEETCODE_SUBMISSIONS_URL}?offset=0&limit=20"
+            
             response = requests.get(url, headers=self.headers)
             response.raise_for_status()
             
@@ -151,23 +152,34 @@ class LeetCodeGitHubSync:
             
             # Deduplicate by problem + language
             unique_submissions = {}
+            
             for submission in accepted_submissions:
                 key = (
                     submission['title_slug'],
-                submission['lang'].lower()
+                    submission['lang'].lower()
                 )
                 
                 # Keep newest submission
                 if key not in unique_submissions:
                     unique_submissions[key] = submission
                     
-            accepted_submissions = list(unique_submissions.values())       
+            deduplicated_submissions = list(unique_submissions.values())       
             
-            logger.info(f"Found {len(accepted_submissions)} accepted submissions")
-            return accepted_submissions
+            logger.info(
+                f"Fetched:{len(submissions)} submissions|"
+                f"Accepted:{len(accepted_submissions)}|"
+                f"Unique:{len(deduplicated_submissions)}"
+            )
+            
+            return deduplicated_submissions
+            
         except Exception as e:
             logger.error(f"Error fetching submissions: {str(e)}")
             raise
+        #Network error logging    
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Network/API error fetching submissions: {str(e)}")
+        raise                
 
     def get_file_extension(self, lang: str) -> str:
         """Get file extension for a given programming language."""
