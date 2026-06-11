@@ -4,7 +4,7 @@ class Solution {
         int maxLength =0;  //Maximum length of consecutive 1s achievable (Longest valid window so far)
         int zeroCount =0;  //number of 0s inside the current window
 
-        //expand the window (right pointer) across entire array
+        //expand the window by moving right pointer across entire array
         for (int right = 0; right <nums.length; right++){
             if (nums[right] == 0){
                 zeroCount++;        //If we encounter a 0, count it as flip needed
